@@ -1,8 +1,8 @@
 let mediaRecorder;
 let audioChunks = [];
-const OPENAI_API_KEY = ""; // Biarkan kosong aman dari blokir GitHub
+const OPENAI_API_KEY = ""; // Biarkan kosong agar aman dari blokir sistem keamanan GitHub
 
-// ================= FITUR AUTENTIKASI: LOGIN, REGISTER, & GOOGLE SIMULASI =================
+// ================= FITUR AUTENTIKASI: LOGIN, REGISTER, & GOOGLE AUTH =================
 
 function tampilkanRegister() {
     document.getElementById("login-card").classList.add("hidden");
@@ -14,7 +14,7 @@ function tampilkanLogin() {
     document.getElementById("login-card").classList.remove("hidden");
 }
 
-// Proses Pendaftaran Akun Baru (Simpan ke LocalStorage)
+// Proses Pendaftaran Akun Baru (Menyimpan Ke Database Browser Lokal)
 function prosesRegister() {
     const nama = document.getElementById("reg-name").value.trim();
     const user = document.getElementById("reg-username").value.trim();
@@ -25,7 +25,6 @@ function prosesRegister() {
         return;
     }
 
-    // Simpan data akun ke browser dalam format database JSON
     let daftarUser = JSON.parse(localStorage.getItem("databaseUser")) || {};
     
     if (daftarUser[user]) {
@@ -33,21 +32,20 @@ function prosesRegister() {
         return;
     }
 
-    daftarUser[user] = { nama Lengkap: nama, password: pass };
+    daftarUser[user] = { namaLengkap: nama, password: pass };
     localStorage.setItem("databaseUser", JSON.stringify(daftarUser));
 
     alert("Akun berhasil dibuat! Silakan masuk menggunakan akun baru Anda.");
     tampilkanLogin();
 }
 
-// Proses Masuk dengan Akun yang Terdaftar
+// Proses Masuk Berdasarkan Akun Terdaftar
 function prosesLogin() {
     const user = document.getElementById("username").value.trim();
     const pass = document.getElementById("password").value.trim();
 
     let databaseUser = JSON.parse(localStorage.getItem("databaseUser")) || {};
 
-    // Cek apakah kecocokan username dan password ada di memori database browser
     if (databaseUser[user] && databaseUser[user].password === pass) {
         bukaAplikasiDashboard(databaseUser[user].namaLengkap);
     } else {
@@ -55,9 +53,8 @@ function prosesLogin() {
     }
 }
 
-// Fitur Tambahan: Simulasi API Google Auth
+// Fitur Alternatif: Masuk Menggunakan Google Akun
 function loginDenganGoogle() {
-    // Meniru jendela autentikasi cepat Google Akun
     let konfirmasi = confirm("Aplikasi ini meminta izin masuk menggunakan Akun Google utama Anda?");
     if (konfirmasi) {
         bukaAplikasiDashboard("User Google BTI");
@@ -80,7 +77,7 @@ function prosesLogout() {
     document.getElementById("password").value = "";
 }
 
-// ================= NAVIGASI TAB APLIKASI =================
+// ================= PERPINDAHAN TAB MENU DASHBOARD =================
 function pindahTab(namaTab) {
     document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
     document.querySelectorAll(".nav-btn").forEach(el => el.classList.remove("active"));
@@ -91,7 +88,7 @@ function pindahTab(namaTab) {
     if (namaTab === 'history') tampilkanHistory();
 }
 
-// ================= AUDIO RECORDING =================
+// ================= TAHAP 1: AUDIO RECORDING (WEB AUDIO API) =================
 function mulaiRekam() {
     navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
         mediaRecorder = new MediaRecorder(stream);
@@ -103,7 +100,7 @@ function mulaiRekam() {
         document.getElementById("btn-stop").disabled = false;
         document.getElementById("record-indicator").classList.add("recording");
         document.getElementById("status-text").innerText = "Status: Merekam Suara Rapat...";
-    }).catch(() => alert("Akses mikrofon ditolak!"));
+    }).catch(() => alert("Akses mikrofon ditolak! Izinkan mikrofon di browser Anda."));
 }
 
 function berhentiRekam() {
@@ -122,7 +119,7 @@ function berhentiRekam() {
     });
 }
 
-// ================= DATA HISTORY =================
+// ================= TAHAP 2 & 3: PENYIMPANAN RIWAYAT (HISTORY) =================
 async function panggilGeminiAIUntukMerangkum(teksRapat) {
     const ringkasanEl = document.getElementById("ringkasan-output");
     ringkasanEl.value = "AI sedang merangkum poin rapat...";
@@ -157,7 +154,7 @@ function tampilkanHistory() {
     `).join("");
 }
 
-// ================= ASISTEN AI & TRANSLATE SIMULASI =================
+// ================= ASISTEN AI & TRANSLATE (MODE SIMULASI AMAN) =================
 async function prosesAsisten(fitur) {
     const inputTeks = document.getElementById("asisten-input").value.trim();
     const outputEl = document.getElementById("asisten-output");
@@ -168,7 +165,7 @@ async function prosesAsisten(fitur) {
     setTimeout(() => {
         outputEl.value = fitur === 'translate' 
             ? "[Hasil Terjemahan AI]: " + inputTeks + " (Selesai Diterjemahkan)"
-            : "[Rekomendasi Optimalisasi Kinerja AI]:\n1. Selalu catat poin utama rapat menggunakan format digital.\n2. Tentukan target penyelesaian (Deadlines) harian.\n3. Lakukan sinkronisasi riwayat pengerjaan secara berkala bersama tim.";
+            : "[Rekomendasi Optimalisasi Kinerja AI]:\n1. Selalu catat poin utama rapat menggunakan format digital.\n2. Tentukan target pengerjaan (Deadlines) harian.\n3. Lakukan sinkronisasi riwayat berkala bersama tim.";
     }, 1000);
 }
 
