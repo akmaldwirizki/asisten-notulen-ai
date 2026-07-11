@@ -1,18 +1,8 @@
 let mediaRecorder;
 let audioChunks = [];
-const OPENAI_API_KEY = ""; // Biarkan kosong agar aman dari blokir sistem keamanan GitHub
+const OPENAI_API_KEY = ""; // Dikosongkan agar aman dari blokir keamanan GitHub
 
-// ================= FITUR AUTENTIKASI: LOGIN, REGISTER, & GOOGLE AUTH =================
-
-function tampilkanRegister() {
-    document.getElementById("login-card").classList.add("hidden");
-    document.getElementById("register-card").classList.remove("hidden");
-}
-
-function tampilkanLogin() {
-    document.getElementById("register-card").classList.add("hidden");
-    document.getElementById("login-card").classList.remove("hidden");
-}
+// ================= FITUR AUTENTIKASI (LOGIN, REGISTER, GOOGLE) =================
 
 // Proses Pendaftaran Akun Baru (Menyimpan Ke Database Browser Lokal)
 function prosesRegister() {
@@ -35,8 +25,10 @@ function prosesRegister() {
     daftarUser[user] = { namaLengkap: nama, password: pass };
     localStorage.setItem("databaseUser", JSON.stringify(daftarUser));
 
-    alert("Akun berhasil dibuat! Silakan masuk menggunakan akun baru Anda.");
-    tampilkanLogin();
+    alert("Akun berhasil dibuat! Anda akan dialihkan ke halaman masuk.");
+    
+    // Berpindah file kembali ke halaman login utama
+    window.location.href = "index.html"; 
 }
 
 // Proses Masuk Berdasarkan Akun Terdaftar
@@ -49,7 +41,7 @@ function prosesLogin() {
     if (databaseUser[user] && databaseUser[user].password === pass) {
         bukaAplikasiDashboard(databaseUser[user].namaLengkap);
     } else {
-        alert("Username atau Password salah! Pastikan Anda sudah membuat akun baru.");
+        alert("Username atau Password salah! Pastikan Anda sudah mendaftar akun.");
     }
 }
 
