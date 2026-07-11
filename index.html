@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Notulen Rapat Otomatis</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <header>
+            <h1>Notulen Rapat Otomatis AI 🎙️🤖</h1>
+            <p>Bina Talenta Indonesia (BTI) - Proyek Pelatihan AI</p>
+        </header>
+
+        <!-- Bagian Perekaman (Tahap 1 & 2) -->
+        <div class="control-panel">
+            <div class="status-zone">
+                <span id="record-indicator" class="indicator"></span>
+                <span id="status-text">Status: Siap merekam rapat</span>
+            </div>
+            <div class="btn-group">
+                <button id="btn-start" onclick="mulaiRekam()">🔴 Mulai Rekam Rapat</button>
+                <button id="btn-stop" onclick="berhentiRekam()" class="btn-danger" disabled>⏹️ Selesai Rapat</button>
+            </div>
+        </div>
+
+        <!-- Bagian Hasil Dashboard (Tahap 3 & 4) -->
+        <div class="dashboard-zone">
+            <div class="result-box">
+                <h3>📜 Transkrip Audio Mentah</h3>
+                <textarea id="transkrip-output" placeholder="Suara rapat yang diubah jadi teks akan muncul di sini..." readonly></textarea>
+            </div>
+
+            <div class="result-box highlight">
+                <h3>✨ Ringkasan AI (Poin, Keputusan, Action Item)</h3>
+                <textarea id="ringkasan-output" placeholder="AI akan merangkum keputusan rapat secara otomatis di sini..." readonly></textarea>
+            </div>
+        </div>
+
+        <div class="action-footer">
+            <button id="btn-download" onclick="unduhNotulen()" class="btn-success" disabled>📥 Unduh Hasil Notulen</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
