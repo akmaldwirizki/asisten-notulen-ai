@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <!-- ================= BOX LOGIN DAN REGISTER ================= -->
+    <!-- ================= BOX AUTENTIKASI (LOGIN & REGISTER) ================= -->
     <div id="auth-page" class="login-container">
         
         <!-- Form Login -->
@@ -19,14 +19,24 @@
                 <input type="text" id="username" placeholder="Masukkan Username Anda">
                 <input type="password" id="password" placeholder="Masukkan Password">
             </div>
-            <button onclick="prosesLogin()">Masuk Aplikasi</button>
             
-            <div class="divider">atau</div>
-            
-            <!-- Tombol Login Google -->
-            <button onclick="loginDenganGoogle()" class="btn-google">Masuk dengan Google</button>
-            
-            <p class="switch-auth">Belum punya akun? <a href="#" onclick="tampilkanRegister()">Daftar Baru</a></p>
+            <!-- 3 Tombol Berjajar ke Samping Beserta Kotak Logo -->
+            <div class="auth-action-row">
+                <div class="auth-btn-wrapper" onclick="prosesLogin()">
+                    <div class="logo-placeholder">[Sign]</div>
+                    <button>Masuk</button>
+                </div>
+                
+                <div class="auth-btn-wrapper" onclick="tampilkanRegister()">
+                    <div class="logo-placeholder">[Reg]</div>
+                    <button class="btn-purple-text">Daftar</button>
+                </div>
+
+                <div class="auth-btn-wrapper" onclick="loginDenganGoogle()">
+                    <div class="logo-placeholder">[Ggl]</div>
+                    <button class="btn-google-text">Google</button>
+                </div>
+            </div>
         </div>
 
         <!-- Form Pembuatan Akun Baru (Register) -->
@@ -38,9 +48,18 @@
                 <input type="text" id="reg-username" placeholder="Buat Username">
                 <input type="password" id="reg-password" placeholder="Buat Password">
             </div>
-            <button onclick="prosesRegister()" class="btn-purple">Buat Akun Sekarang</button>
             
-            <p class="switch-auth">Sudah punya akun? <a href="#" onclick="tampilkanLogin()">Kembali Login</a></p>
+            <!-- Tombol Register Berjajar ke Samping -->
+            <div class="auth-action-row">
+                <div class="auth-btn-wrapper" onclick="prosesRegister()">
+                    <div class="logo-placeholder">[Reg]</div>
+                    <button class="btn-purple-text">Buat Akun</button>
+                </div>
+                <div class="auth-btn-wrapper" onclick="tampilkanLogin()">
+                    <div class="logo-placeholder">[Back]</div>
+                    <button class="btn-secondary-text">Kembali</button>
+                </div>
+            </div>
         </div>
 
     </div>
