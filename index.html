@@ -9,6 +9,7 @@
 <body>
 
     <!-- ================= BOX AUTENTIKASI (LOGIN & REGISTER) ================= -->
+        <!-- ================= BOX AUTENTIKASI (LOGIN & REGISTER) ================= -->
     <div id="auth-page" class="login-container">
         
         <!-- Form Login -->
@@ -20,24 +21,50 @@
                 <input type="password" id="password" placeholder="Masukkan Password">
             </div>
             
-            <!-- 3 Tombol Berjajar ke Samping Beserta Kotak Logo -->
+            <!-- 3 Tombol Berjajar Berhasil Diperbaiki (Menggunakan Tipe Button Khusus) -->
             <div class="auth-action-row">
                 <div class="auth-btn-wrapper" onclick="prosesLogin()">
                     <div class="logo-placeholder">[Sign]</div>
-                    <button>Masuk</button>
+                    <button type="button">Masuk</button>
                 </div>
                 
                 <div class="auth-btn-wrapper" onclick="tampilkanRegister()">
                     <div class="logo-placeholder">[Reg]</div>
-                    <button class="btn-purple-text">Daftar</button>
+                    <button type="button" class="btn-purple-text">Daftar</button>
                 </div>
 
                 <div class="auth-btn-wrapper" onclick="loginDenganGoogle()">
                     <div class="logo-placeholder">[Ggl]</div>
-                    <button class="btn-google-text">Google</button>
+                    <button type="button" class="btn-google-text">Google</button>
                 </div>
             </div>
         </div>
+
+        <!-- Form Pembuatan Akun Baru (Register) -->
+        <div id="register-card" class="login-card hidden">
+            <h2>Daftar Akun Baru</h2>
+            <p>Buat akun Workspace Anda gratis</p>
+            <div class="input-group">
+                <input type="text" id="reg-name" placeholder="Nama Lengkap">
+                <input type="text" id="reg-username" placeholder="Buat Username">
+                <input type="password" id="reg-password" placeholder="Buat Password">
+            </div>
+            
+            <!-- Tombol Register Berjajar ke Samping -->
+            <div class="auth-action-row">
+                <div class="auth-btn-wrapper" onclick="prosesRegister()">
+                    <div class="logo-placeholder">[Reg]</div>
+                    <button type="button" class="btn-purple-text">Buat Akun</button>
+                </div>
+                <div class="auth-btn-wrapper" onclick="tampilkanLogin()">
+                    <div class="logo-placeholder">[Back]</div>
+                    <button type="button" class="btn-secondary-text">Kembali</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 
         <!-- Form Pembuatan Akun Baru (Register) -->
         <div id="register-card" class="login-card hidden">
