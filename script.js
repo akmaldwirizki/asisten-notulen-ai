@@ -1,108 +1,146 @@
-let mediaRecorder;
-let audioChunks = [];
-
-// Catatan Penting untuk Presentasi: 
-// Di bawah ini adalah simulasi pengiriman data teks rapat ke Gemini API.
-// Untuk penggunaan asli, Anda membutuhkan API Key dari Google AI Studio.
-const GEMINI_API_KEY = "TEMPEL_API_KEY_GEMINI_DI_SINI"; 
-
-function mulaiRekam() {
-    navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(stream => {
-            mediaRecorder = new MediaRecorder(stream);
-            mediaRecorder.start();
-            audioChunks = [];
-
-            mediaRecorder.addEventListener("dataavailable", event => {
-                audioChunks.push(event.data);
-            });
-
-            document.getElementById("btn-start").disabled = true;
-            document.getElementById("btn-stop").disabled = false;
-            document.getElementById("record-indicator").classList.add("recording");
-            document.getElementById("status-text").innerText = "Status: Membaca Audio Rapat (Merekam...)";
-            document.getElementById("status-text").style.color = "#dc2626";
-        })
-        .catch(err => {
-            alert("Gagal mengakses mikrofon. Izinkan akses mikrofon di browser Anda!");
-        });
+:root {
+    --bg-dark: #0f172a;
+    --card-bg: rgba(30, 41, 59, 0.7);
+    --neon-blue: #38bdf8;
+    --neon-green: #4ade80;
+    --text-white: #f8fafc;
 }
 
-function berhentiRekam() {
-    mediaRecorder.stop();
-    
-    document.getElementById("btn-start").disabled = false;
-    document.getElementById("btn-stop").disabled = true;
-    document.getElementById("record-indicator").classList.remove("recording");
-    document.getElementById("status-text").innerText = "Status: Mengirim audio ke Google Gemini AI...";
-    document.getElementById("status-text").style.color = "#2563eb";
-
-    mediaRecorder.addEventListener("stop", () => {
-        // Pada aplikasi produksi, file 'audioBlob' ini yang dikirim ke API Speech-to-Text Gemini
-        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-        
-        // Simulasi teks rapat yang berhasil ditranskrip oleh AI berdasarkan rekaman suara
-        setTimeout(() => {
-            const contohTranskripRapat = "Rapat proyek BTI dimulai. Budi mengusulkan agar desain website diperbaiki minggu depan karena tampilannya kurang ramah pengguna. Susi setuju dan bertanggung jawab menyelesaikan desain baru hari Kamis. Ani menambahkan bahwa database harus siap hari Jumat dan itu akan dikerjakan oleh tim backend yaitu Doni. Keputusan rapat hari ini adalah menyetujui perbaikan antarmuka dan target selesai minggu ini.";
-            
-            document.getElementById("transkrip-output").value = contohTranskripRapat;
-            
-            // Lanjut panggil fungsi merangkum teks menggunakan Gemini LLM
-            panggilGeminiAIUntukMerangkum(contohTranskripRapat);
-        }, 2000); // Simulasi jeda loading server 2 detik
-    });
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #020617, #0f172a, #1e1b4b);
+    color: var(--text-white);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
 }
 
-async function panggilGeminiAIUntukMerangkum(teksRapat) {
-    const ringkasanElement = document.getElementById("ringkasan-output");
-    ringkasanElement.value = "AI sedang menyusun ringkasan, menganalisis keputusan, dan membuat action item...";
-
-    try {
-        // Menembak server Google Gemini API (Model LLM Generatif gratis)
-        const response = await fetch(`https://googleapis.com{GEMINI_API_KEY}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: `Ubah teks transkrip rapat berikut menjadi format Notulen Rapat terstruktur. Berikan hasil akhir dengan poin-poin berikut: 1. Poin Utama Pembahasan, 2. Keputusan yang Diambil, 3. Action Item (Daftar Tugas) beserta penanggung jawabnya jika ada. Ini teksnya: "${teksRapat}"`
-                    }]
-                }]
-            })
-        });
-
-        const data = await response.json();
-        const hasilRangkuman = data.candidates[0].content.parts[0].text;
-        
-        ringkasanElement.value = hasilRangkuman;
-        document.getElementById("status-text").innerText = "Status: Notulen Selesai Dibuat!";
-        document.getElementById("status-text").style.color = "#16a34a";
-        document.getElementById("btn-download").disabled = false;
-
-    } catch (error) {
-        // Jika API Key belum diisi/salah, program akan menampilkan fallback agar presentasi Anda tetap aman berjalan aman
-        ringkasanElement.value = "📋 HASIL RINGKASAN ASISTEN AI (Simulasi Mode):\n\n" +
-            "1. POIN UTAMA PEMBAHASAN:\n" +
-            "   - Perbaikan desain antarmuka (UI) website proyek BTI karena kurang user-friendly.\n" +
-            "   - Kesiapan infrastruktur database pendukung.\n\n" +
-            "2. KEPUTUSAN YANG DIAMBIL:\n" +
-            "   - Menyetujui perbaikan total antarmuka web.\n" +
-            "   - Seluruh target pembaruan wajib selesai minggu ini.\n\n" +
-            "3. ACTION ITEM & PENANGGUNG JAWAB:\n" +
-            "   - Susi: Menyelesaikan desain antarmuka baru (Target: Hari Kamis).\n" +
-            "   - Doni (Tim Backend): Menyiapkan dan mengintegrasikan database (Target: Hari Jumat).";
-            
-        document.getElementById("status-text").innerText = "Status: Selesai (Simulasi Mode)";
-        document.getElementById("status-text").style.color = "#16a34a";
-        document.getElementById("btn-download").disabled = false;
-    }
+/* --- ANIMASI LOGIN --- */
+.login-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.login-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    padding: 40px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    max-width: 380px;
+    width: 100%;
+}
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: 1px solid #475569;
+    background: #0f172a;
+    color: white;
 }
 
-function unduhNotulen() {
-    const isiNotulen = document.getElementById("ringkasan-output").value;
-    const blob = new Blob([isiNotulen], { type: "text/plain;charset=utf-8" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "Hasil_Notulen_Rapat_AI.txt";
-    link.click();
+/* --- LAYOUT UTAMA --- */
+.app-wrapper {
+    display: flex;
+    min-height: 100vh;
 }
+.sidebar {
+    width: 260px;
+    background: rgba(15, 23, 42, 0.95);
+    border-right: 1px solid #334155;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+.profile-summary { text-align: center; margin-bottom: 30px; }
+.avatar { font-size: 14px; margin-bottom: 5px; color: var(--neon-blue); }
+.sidebar nav { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.nav-btn {
+    background: transparent;
+    color: #94a3b8;
+    text-align: left;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+.nav-btn.active, .nav-btn:hover {
+    background: var(--card-bg);
+    color: var(--neon-blue);
+    border-left: 4px solid var(--neon-blue);
+}
+.logout-btn { background: #5a1919; margin-top: auto; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; }
+
+.content-area { flex: 1; padding: 40px; background: rgba(15, 23, 42, 0.4); overflow-y: auto; }
+
+/* --- COMPONENT STYLING --- */
+.control-panel {
+    background: var(--card-bg);
+    border: 1px solid #334155;
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+.status-zone { display: flex; align-items: center; gap: 10px; font-weight: bold; }
+.indicator { width: 12px; height: 12px; background: #475569; border-radius: 50%; }
+.indicator.recording { background: #ef4444; animation: blink 1s infinite; }
+
+.dashboard-zone, .asisten-grid { display: flex; gap: 20px; margin-top: 20px; }
+.result-box, .input-box { flex: 1; display: flex; flex-direction: column; }
+.opsi-asisten { display: flex; gap: 10px; margin-top: 15px; }
+select { padding: 12px; background: #0f172a; color: white; border-radius: 8px; border: 1px solid #334155; }
+
+textarea {
+    width: 100%;
+    height: 250px;
+    padding: 15px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: 1px solid #334155;
+    background: var(--card-bg);
+    color: var(--text-white);
+    resize: none;
+    line-height: 1.6;
+}
+textarea:focus { outline: 1px solid var(--neon-blue); }
+
+button {
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: var(--neon-blue);
+    color: #0f172a;
+    transition: 0.2s;
+}
+button:hover { opacity: 0.9; transform: translateY(-1px); }
+button:disabled { background: #475569; color: #94a3b8; cursor: not-allowed; transform: none; }
+.btn-danger { background: #ef4444; color: white; }
+.btn-success { background: var(--neon-green); color: #0f172a; }
+.btn-purple { background: #a855f7; color: white; }
+
+/* --- HISTORY & PROFIL CARD --- */
+.history-item {
+    background: var(--card-bg);
+    border: 1px solid #334155;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+.history-item small { color: var(--neon-blue); }
+.profile-card { background: var(--card-bg); border: 1px solid #334155; padding: 25px; border-radius: 12px; display: flex; gap: 20px; align-items: center; }
+.profile-avatar { font-size: 16px; color: var(--neon-blue); }
+
+.hidden { display: none !important; }
+@keyframes blink { 50% { opacity: 0; } }
+@media (max-width: 768px) { .dashboard-zone, .asisten-grid { flex-direction: column; } .app-wrapper { flex-direction: column; } .sidebar { width: 100%; box-sizing: border-box; } }
