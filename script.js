@@ -2,7 +2,7 @@ let mediaRecorder;
 let audioChunks = [];
 const OPENAI_API_KEY = ""; // Dikosongkan agar aman dari blokir keamanan GitHub
 
-// ================= FITUR AUTENTIKASI (LOGIN, REGISTER, GOOGLE) =================
+// ================= SYARAT AUTENTIKASI: LOGIN & REGISTER VALIDASI KETAT =================
 
 // Proses Pendaftaran Akun Baru (Menyimpan Ke Database Browser Lokal)
 function prosesRegister() {
@@ -10,42 +10,51 @@ function prosesRegister() {
     const user = document.getElementById("reg-username").value.trim();
     const pass = document.getElementById("reg-password").value.trim();
 
+    // Validasi input kosong
     if (!nama || !user || !pass) {
         alert("Semua kolom pendaftaran wajib diisi!");
         return;
     }
 
+    // Mengambil data seluruh pengguna yang sudah terdaftar di memori browser
     let daftarUser = JSON.parse(localStorage.getItem("databaseUser")) || {};
     
+    // Cek apakah username sudah pernah digunakan sebelumnya
     if (daftarUser[user]) {
         alert("Username sudah terpakai! Silakan gunakan username lain.");
         return;
     }
 
+    // Memasukkan akun baru ke dalam data memori browser
     daftarUser[user] = { namaLengkap: nama, password: pass };
     localStorage.setItem("databaseUser", JSON.stringify(daftarUser));
 
+    // Notifikasi sukses sesuai permintaan Anda
     alert("Akun berhasil dibuat! Anda akan dialihkan ke halaman masuk.");
     
-    // Berpindah file kembali ke halaman login utama
+    // Perintah mengembalikan halaman secara nyata ke halaman login (index.html)
     window.location.href = "index.html"; 
 }
 
-// Proses Masuk Berdasarkan Akun Terdaftar
+// Proses Masuk Berdasarkan Akun Terdaftar (VALIDASI KETAT)
 function prosesLogin() {
     const user = document.getElementById("username").value.trim();
     const pass = document.getElementById("password").value.trim();
 
+    // Mengambil data akun-akun yang terdaftar dari memori browser
     let databaseUser = JSON.parse(localStorage.getItem("databaseUser")) || {};
 
+    // Sistem mengecek: Apakah username ada? Dan apakah password-nya cocok?
     if (databaseUser[user] && databaseUser[user].password === pass) {
+        // Jika cocok, izinkan masuk ke dashboard utama
         bukaAplikasiDashboard(databaseUser[user].namaLengkap);
     } else {
-        alert("Username atau Password salah! Pastikan Anda sudah mendaftar akun.");
+        // Sesuai permintaan Anda: Jika belum terdaftar atau salah, maka TIDAK BISA masuk
+        alert("Akses Ditolak! Username belum terdaftar atau password Anda salah. Silakan daftar terlebih dahulu.");
     }
 }
 
-// Fitur Alternatif: Masuk Menggunakan Google Akun
+// Fitur Alternatif: Masuk Menggunakan Google Akun (Simulasi)
 function loginDenganGoogle() {
     let konfirmasi = confirm("Aplikasi ini meminta izin masuk menggunakan Akun Google utama Anda?");
     if (konfirmasi) {
