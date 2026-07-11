@@ -3,45 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Notulen Rapat Otomatis</title>
+    <title>BTI AI Workspace - Pro Notulen dan Asisten Kerja</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="app-container">
-        <header>
-            <h1>Notulen Rapat Otomatis AI 🎙️🤖</h1>
-            <p>Bina Talenta Indonesia (BTI) - Proyek Pelatihan AI</p>
-        </header>
-
-        <!-- Bagian Perekaman (Tahap 1 & 2) -->
-        <div class="control-panel">
-            <div class="status-zone">
-                <span id="record-indicator" class="indicator"></span>
-                <span id="status-text">Status: Siap merekam rapat</span>
+    <!-- ================= HALAMAN LOGIN ================= -->
+    <div id="login-page" class="login-container">
+        <div class="login-card">
+            <h2>BTI AI Workspace</h2>
+            <p>Masuk ke Akun Pelatihan AI Anda</p>
+            <div class="input-group">
+                <input type="text" id="username" placeholder="Masukkan Username Anda">
+                <input type="password" id="password" placeholder="Masukkan Password">
             </div>
-            <div class="btn-group">
-                <button id="btn-start" onclick="mulaiRekam()">🔴 Mulai Rekam Rapat</button>
-                <button id="btn-stop" onclick="berhentiRekam()" class="btn-danger" disabled>⏹️ Selesai Rapat</button>
-            </div>
+            <button onclick="prosesLogin()">Masuk Aplikasi</button>
         </div>
+    </div>
 
-        <!-- Bagian Hasil Dashboard (Tahap 3 & 4) -->
-        <div class="dashboard-zone">
-            <div class="result-box">
-                <h3>📜 Transkrip Audio Mentah</h3>
-                <textarea id="transkrip-output" placeholder="Suara rapat yang diubah jadi teks akan muncul di sini..." readonly></textarea>
+    <!-- ================= HALAMAN UTAMA APLIKASI (DASHBOARD) ================= -->
+    <div id="main-app" class="app-wrapper hidden">
+        
+        <!-- Sidebar Menu Navigasi -->
+        <aside class="sidebar">
+            <div class="profile-summary">
+                <div class="avatar">[User Image]</div>
+                <h4 id="user-display">User BTI</h4>
+                <span>Status: Anggota Premium</span>
             </div>
+            <nav>
+                <button class="nav-btn active" onclick="pindahTab('home')">Home (Notulen AI)</button>
+                <button class="nav-btn" onclick="pindahTab('asisten')">Asisten Kinerja dan Translate</button>
+                <button class="nav-btn" onclick="pindahTab('history')">Riwayat Rekaman (History)</button>
+                <button class="nav-btn" onclick="pindahTab('profil')">Profil Saya</button>
+            </nav>
+            <button class="logout-btn" onclick="prosesLogout()">Keluar</button>
+        </aside>
 
-            <div class="result-box highlight">
-                <h3>✨ Ringkasan AI (Poin, Keputusan, Action Item)</h3>
-                <textarea id="ringkasan-output" placeholder="AI akan merangkum keputusan rapat secara otomatis di sini..." readonly></textarea>
-            </div>
-        </div>
+        <!-- Konten Utama Berdasarkan Tab -->
+        <main class="content-area">
+            
+            <!-- TAB 1: HOME (NOTULEN RAPAT) -->
+            <section id="tab-home" class="tab-content">
+                <h2>Asisten Notulen Rapat Otomatis AI</h2>
+                <div class="control-panel">
+                    <div class="status-zone">
+                        <span id="record-indicator" class="indicator"></span>
+                        <span id="status-text">Status: Siap merekam rapat baru</span>
+                    </div>
+                    <div class="btn-group">
+                        <button id="btn-start" onclick="mulaiRekam()">Mulai Rekam</button>
+                        <button id="btn-stop" onclick="berhentiRekam()" class="btn-danger" disabled>Selesai Rapat</button>
+                    </div>
+                </div>
+                <div class="dashboard-zone">
+                    <div class="result-box">
+                        <h3>Transkrip Audio Mentah</h3>
+                        <textarea id="transkrip-output" placeholder="Suara rapat Anda..." readonly></textarea>
+                    </div>
+                    <div class="result-box highlight">
+                        <h3>Ringkasan AI (Poin dan Keputusan)</h3>
+                        <textarea id="ringkasan-output" placeholder="AI akan merangkum di sini..." readonly></textarea>
+                    </div>
+                </div>
+                <div class="action-footer">
+                    <button id="btn-download" onclick="unduhNotulen()" class="btn-success" disabled>Unduh Hasil Notulen</button>
+                </div>
+            </section>
 
-        <div class="action-footer">
-            <button id="btn-download" onclick="unduhNotulen()" class="btn-success" disabled>📥 Unduh Hasil Notulen</button>
-        </div>
+            <!-- TAB 2: ASISTEN KINERJA & TRANSLATE -->
+            <section id="tab-asisten" class="tab-content hidden">
+                <h2>Asisten Kinerja dan Penerjemah AI</h2>
+                <p>Gunakan fitur ini untuk menerjemahkan notulen atau meminta saran optimasi kerja ke AI.</p>
+                <div class="asisten-grid">
+                    <div class="input-box">
+                        <h3>Masukkan Teks / Catatan Kerja</h3>
+                        <textarea id="asisten-input" placeholder="Ketik teks kerja atau tempel notulen rapat di sini..."></textarea>
+                        
+                        <div class="opsi-asisten">
+                            <select id="pilihan-bahasa">
+                                <option value="Inggris">Terjemahkan ke Inggris</option>
+                                <option value="Jepang">Terjemahkan ke Jepang</option>
+                                <option value="Arab">Terjemahkan ke Arab</option>
+                            </select>
+                            <button onclick="prosesAsisten('translate')">Jalankan Translate</button>
+                            <button onclick="prosesAsisten('kinerja')" class="btn-purple">Analisis Tips Kerja</button>
+                        </div>
+                    </div>
+                    <div class="input-box text-light">
+                        <h3>Hasil Analisis dan Terjemahan AI</h3>
+                        <textarea id="asisten-output" placeholder="Hasil respon AI cerdas akan muncul di sini..." readonly></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: HISTORY -->
+            <section id="tab-history" class="tab-content hidden">
+                <h2>Riwayat Rekaman Anda (Saved History)</h2>
+                <p>Data tersimpan otomatis dengan aman di repositori lokal browser Anda.</p>
+                <div id="history-list" class="history-container">
+                    <!-- Data riwayat akan diisi otomatis oleh JavaScript -->
+                </div>
+            </section>
+
+            <!-- TAB 4: PROFIL -->
+            <section id="tab-profil" class="tab-content hidden">
+                <h2>Profil Pengguna Aplikasi</h2>
+                <div class="profile-card">
+                    <div class="profile-avatar">[Profile Logo]</div>
+                    <div class="profile-details">
+                        <p><strong>Nama Pengguna:</strong> <span id="prof-nama">User BTI</span></p>
+                        <p><strong>Program Pelatihan:</strong> Bina Talenta Indonesia (BTI)</p>
+                        <p><strong>Sistem AI Core:</strong> Google Gemini 1.5 Flash (API Integrator)</p>
+                        <p><strong>Metode Enkripsi:</strong> Local Session Token</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
     </div>
 
     <script src="script.js"></script>
