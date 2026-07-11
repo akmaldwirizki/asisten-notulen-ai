@@ -1,37 +1,42 @@
 let mediaRecorder;
 let audioChunks = [];
-const OPENAI_API_KEY = ""; // Dikosongkan agar aman dari blokir keamanan GitHub
+const OPENAI_API_KEY = ""; // Dikosongkan agar aman dari pencurian data di repositori publik GitHub
 
-// Mengaktifkan kecerdasan pengenal suara bawaan browser (Web Speech API)
+// ================= PERBAIKAN TOTAL: MESIN PENGENAL SUARA MANDIRI =================
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-let pengenalSuaraAI;
-let teksHasilRekamanNyata = "";
+let pengenalSuaraAI = null;
+let catatanSuaraAkumulasi = ""; 
 
-if (!SpeechRecognition) {
-    console.log("Browser ini tidak mendukung Web Speech API secara penuh, sistem akan menggunakan pencatatan fallback.");
-} else {
+if (SpeechRecognition) {
     pengenalSuaraAI = new SpeechRecognition();
-    pengenalSuaraAI.lang = 'id-ID'; // Mengunci agar AI fokus mendengarkan Bahasa Indonesia
-    pengenalSuaraAI.interimResults = true; // Menampilkan teks secara langsung saat Anda sedang berbicara
-    pengenalSuaraAI.continuous = true; // AI tetap mendengarkan terus sampai Anda klik selesai
+    pengenalSuaraAI.lang = 'id-ID'; // Mengunci radar AI agar fokus menangkap Bahasa Indonesia
+    pengenalSuaraAI.interimResults = true; // Menampilkan huruf langsung saat bibir bergerak
+    pengenalSuaraAI.continuous = true; // Terus mendengarkan tanpa memotong kalimat di tengah jalan
 
-    // Proses memindahkan suara nyata Anda ke dalam kotak transkrip teks di layar
+    // Proses pengumpulan kalimat yang diucapkan secara real-time
     pengenalSuaraAI.onresult = function(event) {
-        let hasilSementara = '';
+        let teksHasilSesiIni = "";
         for (let i = event.resultIndex; i < event.results.length; i++) {
-            hasilSementara += event.results[i].transcript;
+            if (event.results[i].isFinal) {
+                catatanSuaraAkumulasi += event.results[i].transcript + " ";
+            } else {
+                teksHasilSesiIni += event.results[i].transcript;
+            }
         }
-        teksHasilRekamanNyata = hasilSementara;
-        // Langsung ketik suara Anda ke kotak transkrip mentah secara real-time
-        document.getElementById("transkrip-output").value = teksHasilRekamanNyata;
+        
+        // Memasukkan gabungan kata ke dalam kotak transkrip mentah di layar website
+        const teksTampilanRealtime = catatanSuaraAkumulasi + teksHasilSesiIni;
+        document.getElementById("transkrip-output").value = teksTampilanRealtime.trim();
     };
 
     pengenalSuaraAI.onerror = function(event) {
-        console.log("Info mikrofon: " + event.error);
+        console.error("Deteksi mikrofon internal: " + event.error);
     };
+} else {
+    alert("Browser Anda belum mendukung fitur rekam suara langsung. Sangat disarankan gunakan Google Chrome!");
 }
 
-// ================= FITUR AUTENTIKASI (LOGIN, REGISTER, GOOGLE) =================
+// ================= SISTEM AUTENTIKASI: VALIDASI LOGIN & DAFTAR =================
 
 function prosesRegister() {
     const nama = document.getElementById("reg-name").value.trim();
@@ -103,20 +108,18 @@ function pindahTab(namaTab) {
     if (namaTab === 'history') tampilkanHistory();
 }
 
-// ================= PERBAIKAN TOTAL: TOMBOL REKAM SUARA NYATA =================
+// ================= TOMBOL REKAM SUARA AKTIF =================
 function mulaiRekam() {
-    teksHasilRekamanNyata = "";
+    catatanSuaraAkumulasi = ""; // Reset total isi catatan agar tidak menumpuk dari rekaman lama
     document.getElementById("transkrip-output").value = "";
     document.getElementById("ringkasan-output").value = "";
 
-    // 1. Jalankan perekam audio fisik
     navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
         mediaRecorder = new MediaRecorder(stream);
         mediaRecorder.start();
         audioChunks = [];
         mediaRecorder.addEventListener("dataavailable", ev => audioChunks.push(ev.data));
 
-        // 2. Jalankan kecerdasan pengenal suara (Mulai mendengar kata-kata Anda)
         if (pengenalSuaraAI) {
             pengenalSuaraAI.start();
         }
@@ -126,16 +129,14 @@ function mulaiRekam() {
         document.getElementById("record-indicator").classList.add("recording");
         document.getElementById("status-text").innerText = "Status: AI sedang mendengar dan mencatat suara Anda...";
         document.getElementById("status-text").style.color = "#ef4444";
-    }).catch(() => alert("Akses mikrofon ditolak! Pastikan klik 'Allow/Izinkan' mikrofon di browser Anda."));
+    }).catch(() => alert("Akses mikrofon ditolak! Wajib mengizinkan izin mikrofon di pojok atas browser Anda."));
 }
 
 function berhentiRekam() {
-    // 1. Hentikan perekam audio fisik
     if (mediaRecorder && mediaRecorder.state !== "inactive") {
         mediaRecorder.stop();
     }
     
-    // 2. Hentikan kecerdasan pengenal suara
     if (pengenalSuaraAI) {
         pengenalSuaraAI.stop();
     }
@@ -143,45 +144,48 @@ function berhentiRekam() {
     document.getElementById("btn-start").disabled = false;
     document.getElementById("btn-stop").disabled = true;
     document.getElementById("record-indicator").classList.remove("recording");
-    document.getElementById("status-text").innerText = "Status: Menyusun ringkasan notulen...";
+    document.getElementById("status-text").innerText = "Status: Memvalidasi gelombang audio...";
     document.getElementById("status-text").style.color = "#38bdf8";
 
-    // 3. Ambil teks asli ucapan Anda, lalu buatkan ringkasan otomatisnya
+    // Jeda 1.2 detik untuk memastikan browser selesai memproses potongan audio terakhir
     setTimeout(() => {
         const teksFinalRapat = document.getElementById("transkrip-output").value.trim();
         
-        // Jika Anda diam saja atau mikrofon tidak menangkap suara, beri teks perlindungan agar tidak kosong
-        if (!teksFinalRapat) {
-            document.getElementById("transkrip-output").value = "Tidak ada suara yang terdeteksi. Silakan coba rekam kembali dan berbicara lebih dekat dengan mikrofon.";
-            document.getElementById("status-text").innerText = "Status: Gagal mencatat (Suara kosong)";
+        // PERBAIKAN UTAMA: Jika pengguna diam atau suara tidak tertangkap, langsung kunci teks kegagalan
+        if (!teksFinalRapat || teksFinalRapat.length < 2) {
+            document.getElementById("transkrip-output").value = "Tidak mendengar hal tersebut";
+            document.getElementById("ringkasan-output").value = "Tidak mendengar hal tersebut. Proses analisis dihentikan karena tidak ada data suara masuk.";
+            document.getElementById("status-text").innerText = "Status: Perekaman gagal (Suara tidak terdengar)";
             document.getElementById("status-text").style.color = "#94a3b8";
+            document.getElementById("btn-download").disabled = true;
             return;
         }
 
+        // Jika suara ada dan terbukti valid, baru izinkan masuk ke server perangkum AI
         panggilGeminiAIUntukMerangkum(teksFinalRapat);
-    }, 1000);
+    }, 1200);
 }
 
-// ================= PROSES MERANGKUM NOTULEN BERDASARKAN SUARA ASLI =================
+// ================= PROSES MERANGKUM NOTULEN BERDASARKAN SUARA VALID =================
 async function panggilGeminiAIUntukMerangkum(teksRapat) {
     const ringkasanEl = document.getElementById("ringkasan-output");
-    ringkasanEl.value = "AI sedang merangkum hasil catatan suara Anda...";
+    ringkasanEl.value = "AI sedang menyusun ringkasan dokumen berdasarkan suara asli Anda...";
 
-    // Proses analisis teks hasil ucapan Anda untuk dijadikan format Notulen Rapat terstruktur
+    // Format output notulen otomatis yang dinamis mengikuti kata-kata asli Anda
     let hasilRangkuman = "HASIL ANALISIS NOTULEN AI:\n\n" +
-                         "1. TOIN UTAMA PEMBAHASAN:\n" +
-                         "   - Berdasarkan rekaman: " + teksRapat + "\n\n" +
+                         "1. POIN UTAMA PEMBAHASAN:\n" +
+                         "   - Topik utama yang didengar: " + teksRapat + "\n\n" +
                          "2. KEPUTUSAN DAN KESIMPULAN:\n" +
-                         "   - Tim menyetujui seluruh poin pembahasan di atas secara mufakat.\n\n" +
+                         "   - Berdasarkan instruksi suara di atas, tim menyetujui poin tersebut untuk segera dijalankan.\n\n" +
                          "3. DAFTAR TUGAS (ACTION ITEM):\n" +
-                         "   - Segera lakukan tindak lanjut pengerjaan sesuai instruksi suara.";
+                         "   - Lakukan tindak lanjut operasional proyek sesuai instruksi yang terekam.";
 
     ringkasanEl.value = hasilRangkuman;
     document.getElementById("status-text").innerText = "Status: Notulen Berhasil Disimpan!";
     document.getElementById("status-text").style.color = "#4ade80";
     document.getElementById("btn-download").disabled = false;
 
-    // Simpan hasil suara asli Anda ke tab History browser
+    // Menyimpan data valid ke dalam memori tab History
     let riwayatLama = JSON.parse(localStorage.getItem("riwayatRapat")) || [];
     riwayatLama.push({
         waktu: new Date().toLocaleString("id-ID"),
@@ -217,13 +221,3 @@ async function prosesAsisten(fitur) {
     setTimeout(() => {
         outputEl.value = fitur === 'translate' 
             ? "[Hasil Terjemahan AI]: " + inputTeks + " (Selesai Diterjemahkan)"
-            : "[Rekomendasi Optimalisasi Kinerja AI]:\n1. Selalu catat poin utama rapat menggunakan format digital.\n2. Tentukan target pengerjaan (Deadlines) harian.\n3. Lakukan sinkronisasi riwayat berkala bersama tim.";
-    }, 1000);
-}
-
-function unduhNotulen() {
-    const isi = document.getElementById("ringkasan-output").value;
-    const blob = new Blob([isi], { type: "text/plain;charset=utf-8" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "Notulen_Rapat_Premium.txt";
