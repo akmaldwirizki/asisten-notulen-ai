@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Akun Baru - BTI Workspace</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-card">
+            <h2>Daftar Akun Baru</h2>
+            <p>Buat akun Workspace Anda gratis</p>
+            <div class="input-group">
+                <input type="text" id="reg-name" placeholder="Nama Lengkap">
+                <input type="text" id="reg-username" placeholder="Buat Username">
+                <input type="password" id="reg-password" placeholder="Buat Password">
+            </div>
+            
+            <div class="auth-action-row">
+                <div class="auth-btn-wrapper" onclick="prosesRegister()">
+                    <div class="logo-placeholder">[Reg]</div>
+                    <button type="button" class="btn-purple-text">Buat Akun</button>
+                </div>
+                
+                <!-- Kembali ke file HTML pertama -->
+                <a href="index.html" class="auth-btn-wrapper">
+                    <div class="logo-placeholder">[Back]</div>
+                    <span class="btn-secondary-text">Kembali</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
