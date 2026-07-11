@@ -8,9 +8,11 @@
 </head>
 <body>
 
-    <!-- ================= HALAMAN LOGIN ================= -->
-    <div id="login-page" class="login-container">
-        <div class="login-card">
+    <!-- ================= BOX LOGIN DAN REGISTER ================= -->
+    <div id="auth-page" class="login-container">
+        
+        <!-- Form Login -->
+        <div id="login-card" class="login-card">
             <h2>BTI AI Workspace</h2>
             <p>Masuk ke Akun Pelatihan AI Anda</p>
             <div class="input-group">
@@ -18,7 +20,29 @@
                 <input type="password" id="password" placeholder="Masukkan Password">
             </div>
             <button onclick="prosesLogin()">Masuk Aplikasi</button>
+            
+            <div class="divider">atau</div>
+            
+            <!-- Tombol Login Google -->
+            <button onclick="loginDenganGoogle()" class="btn-google">Masuk dengan Google</button>
+            
+            <p class="switch-auth">Belum punya akun? <a href="#" onclick="tampilkanRegister()">Daftar Baru</a></p>
         </div>
+
+        <!-- Form Pembuatan Akun Baru (Register) -->
+        <div id="register-card" class="login-card hidden">
+            <h2>Daftar Akun Baru</h2>
+            <p>Buat akun Workspace Anda gratis</p>
+            <div class="input-group">
+                <input type="text" id="reg-name" placeholder="Nama Lengkap">
+                <input type="text" id="reg-username" placeholder="Buat Username">
+                <input type="password" id="reg-password" placeholder="Buat Password">
+            </div>
+            <button onclick="prosesRegister()" class="btn-purple">Buat Akun Sekarang</button>
+            
+            <p class="switch-auth">Sudah punya akun? <a href="#" onclick="tampilkanLogin()">Kembali Login</a></p>
+        </div>
+
     </div>
 
     <!-- ================= HALAMAN UTAMA APLIKASI (DASHBOARD) ================= -->
@@ -126,4 +150,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
