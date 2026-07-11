@@ -8,12 +8,9 @@
 </head>
 <body>
 
-    <!-- ================= BOX AUTENTIKASI (LOGIN & REGISTER) ================= -->
-        <!-- ================= BOX AUTENTIKASI (LOGIN & REGISTER) ================= -->
+    <!-- ================= BOX LOGIN UTAMA ================= -->
     <div id="auth-page" class="login-container">
-        
-        <!-- Form Login -->
-        <div id="login-card" class="login-card">
+        <div class="login-card">
             <h2>BTI AI Workspace</h2>
             <p>Masuk ke Akun Pelatihan AI Anda</p>
             <div class="input-group">
@@ -21,17 +18,18 @@
                 <input type="password" id="password" placeholder="Masukkan Password">
             </div>
             
-            <!-- 3 Tombol Berjajar Berhasil Diperbaiki (Menggunakan Tipe Button Khusus) -->
+            <!-- 3 Tombol Berjajar ke Samping -->
             <div class="auth-action-row">
                 <div class="auth-btn-wrapper" onclick="prosesLogin()">
                     <div class="logo-placeholder">[Sign]</div>
                     <button type="button">Masuk</button>
                 </div>
                 
-                <div class="auth-btn-wrapper" onclick="tampilkanRegister()">
+                <!-- Tombol ini sekarang langsung pindah ke file html kedua -->
+                <a href="daftar.html" class="auth-btn-wrapper">
                     <div class="logo-placeholder">[Reg]</div>
-                    <button type="button" class="btn-purple-text">Daftar</button>
-                </div>
+                    <span class="btn-text-purple">Daftar</span>
+                </a>
 
                 <div class="auth-btn-wrapper" onclick="loginDenganGoogle()">
                     <div class="logo-placeholder">[Ggl]</div>
@@ -39,62 +37,10 @@
                 </div>
             </div>
         </div>
-
-        <!-- Form Pembuatan Akun Baru (Register) -->
-        <div id="register-card" class="login-card hidden">
-            <h2>Daftar Akun Baru</h2>
-            <p>Buat akun Workspace Anda gratis</p>
-            <div class="input-group">
-                <input type="text" id="reg-name" placeholder="Nama Lengkap">
-                <input type="text" id="reg-username" placeholder="Buat Username">
-                <input type="password" id="reg-password" placeholder="Buat Password">
-            </div>
-            
-            <!-- Tombol Register Berjajar ke Samping -->
-            <div class="auth-action-row">
-                <div class="auth-btn-wrapper" onclick="prosesRegister()">
-                    <div class="logo-placeholder">[Reg]</div>
-                    <button type="button" class="btn-purple-text">Buat Akun</button>
-                </div>
-                <div class="auth-btn-wrapper" onclick="tampilkanLogin()">
-                    <div class="logo-placeholder">[Back]</div>
-                    <button type="button" class="btn-secondary-text">Kembali</button>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-
-        <!-- Form Pembuatan Akun Baru (Register) -->
-        <div id="register-card" class="login-card hidden">
-            <h2>Daftar Akun Baru</h2>
-            <p>Buat akun Workspace Anda gratis</p>
-            <div class="input-group">
-                <input type="text" id="reg-name" placeholder="Nama Lengkap">
-                <input type="text" id="reg-username" placeholder="Buat Username">
-                <input type="password" id="reg-password" placeholder="Buat Password">
-            </div>
-            
-            <!-- Tombol Register Berjajar ke Samping -->
-            <div class="auth-action-row">
-                <div class="auth-btn-wrapper" onclick="prosesRegister()">
-                    <div class="logo-placeholder">[Reg]</div>
-                    <button class="btn-purple-text">Buat Akun</button>
-                </div>
-                <div class="auth-btn-wrapper" onclick="tampilkanLogin()">
-                    <div class="logo-placeholder">[Back]</div>
-                    <button class="btn-secondary-text">Kembali</button>
-                </div>
-            </div>
-        </div>
-
     </div>
 
     <!-- ================= HALAMAN UTAMA APLIKASI (DASHBOARD) ================= -->
     <div id="main-app" class="app-wrapper hidden">
-        
-        <!-- Sidebar Menu Navigasi -->
         <aside class="sidebar">
             <div class="profile-summary">
                 <div class="avatar">[User Image]</div>
@@ -110,10 +56,8 @@
             <button class="logout-btn" onclick="prosesLogout()">Keluar</button>
         </aside>
 
-        <!-- Konten Utama Berdasarkan Tab -->
         <main class="content-area">
-            
-            <!-- TAB 1: HOME (NOTULEN RAPAT) -->
+            <!-- TAB 1: HOME -->
             <section id="tab-home" class="tab-content">
                 <h2>Asisten Notulen Rapat Otomatis AI</h2>
                 <div class="control-panel">
@@ -149,7 +93,6 @@
                     <div class="input-box">
                         <h3>Masukkan Teks / Catatan Kerja</h3>
                         <textarea id="asisten-input" placeholder="Ketik teks kerja atau tempel notulen rapat di sini..."></textarea>
-                        
                         <div class="opsi-asisten">
                             <select id="pilihan-bahasa">
                                 <option value="Inggris">Terjemahkan ke Inggris</option>
@@ -171,9 +114,7 @@
             <section id="tab-history" class="tab-content hidden">
                 <h2>Riwayat Rekaman Anda (Saved History)</h2>
                 <p>Data tersimpan otomatis dengan aman di repositori lokal browser Anda.</p>
-                <div id="history-list" class="history-container">
-                    <!-- Data riwayat akan diisi otomatis oleh JavaScript -->
-                </div>
+                <div id="history-list" class="history-container"></div>
             </section>
 
             <!-- TAB 4: PROFIL -->
@@ -189,11 +130,9 @@
                     </div>
                 </div>
             </section>
-
         </main>
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
-
