@@ -144,3 +144,27 @@ button:disabled { background: #475569; color: #94a3b8; cursor: not-allowed; tran
 .hidden { display: none !important; }
 @keyframes blink { 50% { opacity: 0; } }
 @media (max-width: 768px) { .dashboard-zone, .asisten-grid { flex-direction: column; } .app-wrapper { flex-direction: column; } .sidebar { width: 100%; box-sizing: border-box; } }
+/* Taruh kode ini di baris paling bawah file style.css */
+.divider { 
+    margin: 15px 0; 
+    color: #64748b; 
+    font-size: 13px; 
+    text-transform: uppercase; 
+}
+.btn-google { 
+    background: #ffffff; 
+    color: #1e293b; 
+    margin-bottom: 10px; 
+    width: 100%; 
+    box-sizing: border-box; 
+}
+.switch-auth { 
+    margin-top: 20px; 
+    font-size: 14px; 
+    color: #94a3b8; 
+}
+.switch-auth a { 
+    color: #38bdf8; 
+    text-decoration: none; 
+    font-weight: bold; 
+}
