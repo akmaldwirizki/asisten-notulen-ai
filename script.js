@@ -221,3 +221,5 @@ async function prosesAsisten(fitur) {
     setTimeout(() => {
         outputEl.value = fitur === 'translate' 
             ? "[Hasil Terjemahan AI]: " + inputTeks + " (Selesai Diterjemahkan)"
+
+            
